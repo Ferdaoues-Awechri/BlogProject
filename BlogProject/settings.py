@@ -30,6 +30,10 @@ ALLOWED_HOSTS = []
 
 # Application definition
 
+LOGIN_REDIRECT_URL = 'home'
+LOGOUT_REDIRECT_URL = 'home'
+
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -38,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'blogapp',
+    'accounts',
 ]
 
 MIDDLEWARE = [
@@ -51,6 +56,7 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'BlogProject.urls'
+
 
 TEMPLATES = [
     {
