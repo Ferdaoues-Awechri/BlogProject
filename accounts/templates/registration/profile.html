@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profil utilisateur</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            background: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            line-height: 1.6;
+        }
+
+        .profile-container {
+            width: 100%;
+            max-width: 480px;
+            background: #ffffff;
+            padding: 3rem 2.5rem;
+            border: 1px solid #e5e5e5;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            text-align: center;
+        }
+
+        h2 {
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: #000000;
+            margin-bottom: 2rem;
+            letter-spacing: -0.5px;
+        }
+
+        .profile-info {
+            text-align: left;
+            margin-bottom: 2rem;
+        }
+
+        .profile-info p {
+            margin-bottom: 1rem;
+            font-size: 1rem;
+            color: #333333;
+        }
+
+        .label {
+            font-weight: 600;
+            color: #000000;
+        }
+
+        .avatar {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #000000;
+            margin-bottom: 1rem;
+        }
+
+        .profile-actions {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+        }
+
+        button, a.button-link {
+            padding: 0.875rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #ffffff;
+            background: #000000;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        button:hover, a.button-link:hover {
+            background: #333333;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        button:active, a.button-link:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        a {
+            color: #000000;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        a:hover {
+            color: #333333;
+        }
+
+        @media (max-width: 640px) {
+            .profile-container {
+                padding: 2rem 1.5rem;
+            }
+            h2 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="profile-container">
+        {% if user.is_authenticated %}
+            {% comment %} Optional: Display user avatar if available {% endcomment %}
+            <img src="https://ui-avatars.com/api/?name={{ user.username }}&background=000000&color=ffffff&size=128" alt="Avatar" class="avatar">
+
+            <h2>Mon Profil</h2>
+
+            <div class="profile-info">
+                <p><span class="label">Nom d'utilisateur :</span> {{ user.username }}</p>
+            </div>
+
+            <div class="profile-actions">
+                <a href="{% url 'home' %}" class="button-link">Accueil</a>
+                <form method="post" action="{% url 'logout' %}">
+                    {% csrf_token %}
+                    <button type="submit">Déconnexion</button>
+                </form>
+            </div>
+        {% else %}
+            <h2>Accès refusé</h2>
+            <p>Vous devez être connecté pour voir votre profil.</p>
+            <a href="{% url 'login' %}" class="button-link">Se connecter</a>
+        {% endif %}
+    </div>
+</body>
+</html>

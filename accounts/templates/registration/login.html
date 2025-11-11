@@ -1,16 +1,461 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <title>Connexion</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion</title>
+    <style>
+         * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            background: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            line-height: 1.6;
+        }
+
+        .auth-container {
+            width: 100%;
+            max-width: 420px;
+            background: #ffffff;
+            padding: 3rem 2.5rem;
+            border: 1px solid #e5e5e5;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .auth-header {
+            margin-bottom: 2.5rem;
+            text-align: center;
+        }
+
+        h2 {
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: #000000;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.5px;
+        }
+
+        .auth-subtitle {
+            font-size: 0.95rem;
+            color: #666666;
+            font-weight: 400;
+        }
+
+        form {
+            width: 100%;
+        }
+
+        /* Django form.as_p styling */
+        p {
+            margin-bottom: 1.5rem;
+        }
+
+        form p:last-of-type {
+            margin-bottom: 0.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #000000;
+            letter-spacing: 0.2px;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            font-size: 0.95rem;
+            color: #000000;
+            background: #ffffff;
+            border: 1.5px solid #e0e0e0;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            font-family: inherit;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #000000;
+            box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.05);
+        }
+
+        input::placeholder {
+            color: #999999;
+        }
+
+        /* Error messages styling */
+        .errorlist {
+            list-style: none;
+            padding: 0;
+            margin: 0.5rem 0 0 0;
+        }
+
+        .errorlist li {
+            font-size: 0.85rem;
+            color: #666666;
+            padding-left: 0.25rem;
+        }
+
+        ul.errorlist {
+            border-left: 2px solid #000000;
+            padding-left: 0.75rem;
+            margin-top: 0.5rem;
+        }
+
+        /* Non-field errors (login failed, etc.) */
+        .errorlist.nonfield {
+            background: #fafafa;
+            border: 1px solid #e5e5e5;
+            border-left: 2px solid #000000;
+            padding: 0.75rem;
+            border-radius: 6px;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Help text */
+        .helptext {
+            display: block;
+            font-size: 0.85rem;
+            color: #999999;
+            margin-top: 0.5rem;
+        }
+
+        /* Remember me checkbox */
+        .remember-me {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            margin-right: 0.5rem;
+            cursor: pointer;
+            accent-color: #000000;
+        }
+
+        .remember-me label {
+            margin: 0;
+            cursor: pointer;
+            font-weight: 400;
+            color: #333333;
+        }
+
+        /* Forgot password link */
+        .forgot-password {
+            text-align: right;
+            margin-bottom: 1.5rem;
+        }
+
+        .forgot-password a {
+            font-size: 0.9rem;
+            color: #666666;
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .forgot-password a:hover {
+            color: #000000;
+        }
+
+        button[type="submit"] {
+            width: 100%;
+            padding: 1rem;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #ffffff;
+            background: #000000;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            letter-spacing: 0.3px;
+        }
+
+        button[type="submit"]:hover {
+            background: #333333;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        button[type="submit"]:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        button[type="submit"]:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Link styling */
+        .auth-footer {
+            margin-top: 2rem;
+            text-align: center;
+            padding-top: 1.5rem;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        .auth-footer p {
+            margin: 0;
+            font-size: 0.95rem;
+            color: #666666;
+        }
+
+        a {
+            color: #000000;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .auth-footer a::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: #000000;
+            transition: width 0.3s ease;
+        }
+
+        .auth-footer a:hover::after {
+            width: 100%;
+        }
+
+        .auth-footer a:hover {
+            color: #333333;
+        }
+
+        /* Required field indicator */
+        label.required::after {
+            content: ' *';
+            color: #000000;
+        }
+
+        /* Focus visible for accessibility */
+        input:focus-visible,
+        button:focus-visible {
+            outline: 2px solid #000000;
+            outline-offset: 2px;
+        }
+
+        /* Loading spinner */
+        .spinner {
+            display: none;
+            width: 16px;
+            height: 16px;
+            border: 2px solid #ffffff;
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+            margin-left: 0.5rem;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        button.loading .spinner {
+            display: inline-block;
+        }
+
+        /* Divider */
+        .divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            margin: 2rem 0;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        .divider span {
+            padding: 0 1rem;
+            color: #999999;
+            font-size: 0.85rem;
+        }
+
+        /* Social login buttons (optional) */
+        .social-login {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .social-btn {
+            flex: 1;
+            padding: 0.875rem;
+            background: #ffffff;
+            border: 1.5px solid #e0e0e0;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 500;
+            color: #333333;
+        }
+
+        .social-btn:hover {
+            background: #fafafa;
+            border-color: #000000;
+            transform: translateY(-1px);
+        }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            .auth-container {
+                padding: 2rem 1.5rem;
+            }
+
+            h2 {
+                font-size: 1.5rem;
+            }
+
+            button[type="submit"] {
+                padding: 0.875rem;
+            }
+        }
+
+        /* Success message */
+        .success-message {
+            padding: 1rem;
+            background: #f8f8f8;
+            border: 1px solid #e5e5e5;
+            border-radius: 6px;
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+            color: #000000;
+        }
+
+        /* Password toggle */
+        .password-wrapper {
+            position: relative;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #666666;
+            padding: 0;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: color 0.2s ease;
+        }
+
+        .password-toggle:hover {
+            color: #000000;
+        }
+
+        /* Smooth animations */
+        input,
+        button {
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+    </style>
 </head>
 <body>
-  <h2>Se connecter</h2>
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Se connecter</button>
-  </form>
-  <p><a href="{% url 'signup' %}">Pas encore inscrit ? Créez un compte</a></p>
+    <div class="auth-container">
+        <div class="auth-header">
+            <h2>Se connecter</h2>
+            <p class="auth-subtitle">Bienvenue ! Connectez-vous à votre compte</p>
+        </div>
+
+        <form method="post" action="{% url 'login' %}">
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+            <ul class="errorlist nonfield">
+                {% for error in form.non_field_errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+
+            <p>
+                <label for="{{ form.username.id_for_label }}" class="required">Nom d'utilisateur</label>
+                {{ form.username }}
+            </p>
+
+            <p>
+                <label for="{{ form.password.id_for_label }}" class="required">Mot de passe</label>
+                <div class="password-wrapper">
+                    {{ form.password }}
+                    <button type="button" class="password-toggle" onclick="togglePassword()">
+                        <span id="eye-icon">👁️</span>
+                    </button>
+                </div>
+            </p>
+
+            <div class="remember-me">
+                <input type="checkbox" name="remember_me" id="id_remember_me">
+                <label for="id_remember_me">Se souvenir de moi</label>
+            </div>
+
+            <div class="forgot-password">
+                <a href="{% url 'password_reset' %}">Mot de passe oublié ?</a>
+            </div>
+
+            <button type="submit">Se connecter<span class="spinner"></span></button>
+        </form>
+
+        
+  {% if user.is_authenticated %}
+    <p><a href="{% url 'password_change' %}">Changer mon mot de passe</a></p>
+  {% endif %}
+  
+        <div class="auth-footer">
+            <p>Pas encore inscrit ? <a href="{% url 'signup' %}">Créez un compte</a></p>
+        </div>
+      
+    </div>
+
+    <script>
+        /* === Keep your JS exactly as it is === */
+        function togglePassword() {
+            const passwordInput = document.getElementById('{{ form.password.id_for_label }}');
+            const eyeIcon = document.getElementById('eye-icon');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                eyeIcon.textContent = '🙈';
+            } else {
+                passwordInput.type = 'password';
+                eyeIcon.textContent = '👁️';
+            }
+        }
+    </script>
 </body>
 </html>

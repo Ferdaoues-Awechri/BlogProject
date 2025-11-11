@@ -1,16 +1,252 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <title>Inscription</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inscription</title>
+    <style>
+        /* === SAME DESIGN AS LOGIN PAGE === */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            background: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            line-height: 1.6;
+        }
+
+        .auth-container {
+            width: 100%;
+            max-width: 420px;
+            background: #ffffff;
+            padding: 3rem 2.5rem;
+            border: 1px solid #e5e5e5;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .auth-header {
+            margin-bottom: 2.5rem;
+            text-align: center;
+        }
+
+        h2 {
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: #000000;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.5px;
+        }
+
+        .auth-subtitle {
+            font-size: 0.95rem;
+            color: #666666;
+            font-weight: 400;
+        }
+
+        form {
+            width: 100%;
+        }
+
+        p {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #000000;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            font-size: 0.95rem;
+            color: #000000;
+            background: #ffffff;
+            border: 1.5px solid #e0e0e0;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            font-family: inherit;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #000000;
+            box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .errorlist {
+            list-style: none;
+            padding: 0;
+            margin: 0.5rem 0 0 0;
+            font-size: 0.85rem;
+            color: #666666;
+        }
+
+        button[type="submit"] {
+            width: 100%;
+            padding: 1rem;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #ffffff;
+            background: #000000;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            letter-spacing: 0.3px;
+        }
+
+        button[type="submit"]:hover {
+            background: #333333;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .auth-footer {
+            margin-top: 2rem;
+            text-align: center;
+            padding-top: 1.5rem;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        .auth-footer p {
+            margin: 0;
+            font-size: 0.95rem;
+            color: #666666;
+        }
+
+        .auth-footer a {
+            color: #000000;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .auth-footer a::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: #000000;
+            transition: width 0.3s ease;
+        }
+
+        .auth-footer a:hover::after {
+            width: 100%;
+        }
+
+        .auth-footer a:hover {
+            color: #333333;
+        }
+
+        .password-wrapper {
+            position: relative;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #666666;
+            padding: 0;
+            width: 24px;
+            height: 24px;
+        }
+
+        .password-toggle:hover {
+            color: #000000;
+        }
+    </style>
 </head>
 <body>
-  <h2>Créer un compte</h2>
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">S'inscrire</button>
-  </form>
-  <p><a href="{% url 'login' %}">Déjà un compte ? Connectez-vous</a></p>
+    <div class="auth-container">
+        <div class="auth-header">
+            <h2>Créer un compte</h2>
+            <p class="auth-subtitle">Rejoignez-nous en quelques secondes</p>
+        </div>
+
+        <form method="post">
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+            <ul class="errorlist nonfield">
+                {% for error in form.non_field_errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+
+            <p>
+                <label for="{{ form.username.id_for_label }}" class="required">Nom d'utilisateur</label>
+                {{ form.username }}
+            </p>
+
+            <p>
+                <label for="{{ form.password1.id_for_label }}" class="required">Mot de passe</label>
+                <div class="password-wrapper">
+                    {{ form.password1 }}
+                    <button type="button" class="password-toggle" onclick="togglePassword('id_password1', 'eye-icon1')">
+                        <span id="eye-icon1">👁️</span>
+                    </button>
+                </div>
+                {% if form.password1.help_text %}
+                <span class="helptext">{{ form.password1.help_text }}</span>
+                {% endif %}
+            </p>
+
+            <p>
+                <label for="{{ form.password2.id_for_label }}" class="required">Confirmer le mot de passe</label>
+                <div class="password-wrapper">
+                    {{ form.password2 }}
+                    <button type="button" class="password-toggle" onclick="togglePassword('id_password2', 'eye-icon2')">
+                        <span id="eye-icon2">👁️</span>
+                    </button>
+                </div>
+            </p>
+
+            <button type="submit">S'inscrire</button>
+        </form>
+
+        <div class="auth-footer">
+            <p>Déjà un compte ? <a href="{% url 'login' %}">Connectez-vous</a></p>
+        </div>
+    </div>
+
+    <script>
+        // Toggle password visibility for both fields
+        function togglePassword(inputId, iconId) {
+            const passwordInput = document.getElementById(inputId);
+            const eyeIcon = document.getElementById(iconId);
+
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                eyeIcon.textContent = '🙈';
+            } else {
+                passwordInput.type = 'password';
+                eyeIcon.textContent = '👁️';
+            }
+        }
+    </script>
 </body>
 </html>
